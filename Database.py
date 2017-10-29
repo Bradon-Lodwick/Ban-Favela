@@ -23,5 +23,7 @@ try:
     cur = conn.cursor()
     cur.execute(sql)
     rows = cur.fetchall()
+    for row in rows:
+        print(row)
 except psycopg2.Error as e:
     print(e)
