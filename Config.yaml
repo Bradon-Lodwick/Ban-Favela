@@ -2,4 +2,5 @@ database:
   host: replace-with-db-host
   user: replace-with-db-user
   password: replace-with-db-password
+  name: replace-with-db-name
 repo: https://github.com/Bradon-Lodwick/Ban-Favela
