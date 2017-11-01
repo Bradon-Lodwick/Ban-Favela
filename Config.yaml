@@ -1,6 +1,15 @@
+# All values necessary for the database connection
 database:
-  host: replace-with-db-host
-  user: replace-with-db-user
-  password: replace-with-db-password
-  name: replace-with-db-name
+  host: replace-with-db-host  # The host address for the db
+  user: replace-with-db-user  # The username for the db
+  password: replace-with-db-password  # The password for the db
+  name: replace-with-db-name  # The name of the db
+
+# The discord bot's token to be used to start the bot
+token: replace-with-bot-token
+
+# The path to the error logging file
+log: error_log.log
+
+# The location of the git repo the bot code is located on
 repo: https://github.com/Bradon-Lodwick/Ban-Favela
