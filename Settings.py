@@ -1,5 +1,4 @@
 import yaml  # Used to load the settings from the Config.yaml file
-import Database  # Used to load the discord server settings into a dictionary from the database
 
 # Load the config file into a dictionary
 with open("""Config.yaml""") as cfg_file:
@@ -21,5 +20,7 @@ TOKEN = cfg['token']
 # The location for the log file loaded from the config file
 LOG = cfg['log']
 
-# Loads the discord server settings from the database
-SERVER_SETTINGS = Database.get_settings()
+# The settings for the servers will be held in here in a dictionary format,
+# where the server_id is the key and then each setting for the server is a key in a nested dictionary.
+# Will be loaded from the Database.py file using get_settings, and is assigned values within Database.py
+SERVER_SETTINGS = dict()
