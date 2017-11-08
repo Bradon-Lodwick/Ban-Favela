@@ -226,6 +226,37 @@ async def on_message(message):
             # Outputs the new message through discord
             await client.send_message(message.channel, new_message)
 
+        # TODO Add this function to the help message
+        # TODO Add a try case to convert the number arguments into integers, giving an error if input is other
+        # Sets the score of a game to the given scores, the first score being the score of the team submitting scores
+        # Needs the team to be mentioned to submit the proper game scores
+        elif message.content.startswith("{}score".format(c_symbol)):
+            # Gets a list of roles mentioned in the message
+            roles = message.raw_role_mentions
+            # If the correct number of args was used, including mentioning the role
+            if number_of_args == 4 and len(roles) == 1:
+                # Attempts to set the score of the game
+                success = Database.update_game_scores(message.server.id,
+                                                      Settings.SERVER_SETTINGS[message.server.id]['current_round'],
+                                                      roles[0], int(args[1]), int(args[2]))
+                # If update was successful
+                if success:
+                    new_message = 'Your game for round {} was successfully reported with a score of {} for your team ' \
+                                  'and {} for the other team'\
+                        .format(Settings.SERVER_SETTINGS[message.server.id]['current_round'], args[1], args[2])
+                # If it wasn't updated successfully
+                else:
+                    new_message = 'There was an error setting the score for your game. Are you sure the game ' \
+                                  'wasn\'t already reported, and that you used numbers to input your scores? ' \
+                                  'Use {}help to get a message sent to you with use instructions.'.format(c_symbol)
+            # If the wrong number of arguments was given
+            else:
+                new_message = '<@{}> did not use the command properly.  To use, use the following format:\n;' \
+                              '`{}score your-score opponent-score @your-team`, where your-score is an integer score ' \
+                              'for your team, opponent-score is an integer score for your opponent, and @your-team ' \
+                              'is the role mention of your team.'
+            await client.send_message(message.channel, new_message)
+
 
 # Runs the discord bot
 client.run(Settings.TOKEN)

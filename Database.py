@@ -308,3 +308,44 @@ def get_players(server, team, ign=False):
         # If the status message was not as expected
         else:
             return False
+
+
+def update_game_scores(server, match_round, team_given, given_team_score, other_team_score):
+    """ Update the scores of the given team's game in the given round.  Only needs 1 team to update the proper game.
+
+    :param server: The discord id of the server the game is in.
+    :type server: str
+
+    :param match_round: The round to change the score for.
+    :type match_round: int
+
+    :param team_given: The discord id of the given team.
+    :type team_given: str
+
+    :param given_team_score: The score of the given team.
+    :type given_team_score: int
+
+    :param other_team_score: The score of the other team.
+    :type other_team_score: int
+
+    :return: Returns the success of updating the game scores.
+    :rtype: bool
+    """
+
+    # Opens a database connection where commits cannot occur, with a cursor object to use in that connection
+    with connect(commit=True) as cursor:
+        # The sql to be executed to update the score of the game
+        sql = """UPDATE "Matches" m\n\tSET team_1_score=(CASE WHEN m.team_1=t.id THEN %s ELSE %s END), 
+            team_2_score=(CASE WHEN m.team_2=t.id THEN %s ELSE %s END) FROM "Teams" t\n\tWHERE m.round=%s AND 
+            t.discord=%s AND (m.team_1=t.id OR m.team_2=t.id) AND m.server=%s AND m.team_1_score IS NULL 
+            AND m.team_2_score IS NULL"""
+        # Attempts to execute the sql to update the game results
+        cursor.execute(sql, (given_team_score, other_team_score, given_team_score, other_team_score, match_round,
+                             team_given, server))
+        # Checks if the status message is as expected
+        if cursor.statusmessage == 'UPDATE 1':
+            # Returns a message saying the team was added successfully
+            return True
+        # If the status message is not as expected, return False
+        else:
+            return False
